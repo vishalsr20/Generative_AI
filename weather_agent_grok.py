@@ -1,10 +1,11 @@
 from dotenv import load_dotenv 
-from openai import OpenAI
+from groq import Groq 
 import os 
 import json
+
 load_dotenv()
 
-client = OpenAI()
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def get_weather(city:str):
     return "31 degree celcius"
@@ -42,10 +43,14 @@ system_prompt = """
 """
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="openai/gpt-oss-120b",
     messages=[
         {"role":"system", "content":system_prompt},
-        { "role" : "user", "content":"What is the current weather of Mumbai ?"}
+        { "role" : "user", "content":"What is the current weather of Pune ?"},
+        {"role":"assistant", "content": json.dumps({"step": "plan", "content": "The user wants the current weather information for Pune."})},
+        {"role":"assistant", "content": json.dumps({"step": "plan", "content": "The previous weather data was for Mumbai, but the user asked for Pune. I need to call get_weather for Pune."})},
+        {"role":"assistant", "content": json.dumps({"step": "action", "function": "get_weather", "input": "Pune"})},
+        {"role":"assistant", "content": json.dumps({"step": "observe", "output": "30°C, clear sky"})},
     ]
 )
 
