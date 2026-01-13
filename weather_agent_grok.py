@@ -8,6 +8,12 @@ load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
+def run_command(command):
+    result = os.system(command)
+    return result
+
+# print(run_command("dir"))
+
 def get_weather(city:str):
     # TODO:
     url = f"https://wttr.in/{city}?format=%C+%t%22"
@@ -21,6 +27,10 @@ available_tools = {
     "get_weather":{
         "fn":get_weather,
         "description":"Take a city name as an input and returns the current weather for the city"
+    },
+    "run_command":{
+         "fn":run_command,
+         "description":"Take a command as inoout to execute on system and returns output"
     }
 }
 
@@ -46,6 +56,8 @@ system_prompt = """
     }}
 
     Available Tools:
+    - get_weather : Takes a city name as an input and return the current weather for the city.
+    - run_command : Takes a command as input to execute on sysytem and returns output.
 
     Example:
     User Query : What is the weather of the new york ? 
