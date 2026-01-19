@@ -51,7 +51,7 @@ system_prompt = """
         "step":"string",
         "content":"string",
         "function":"The name of function if the step is action",
-        "input":"The inout parameter for the function",
+        "input":"The input parameter for the function",
 
     }}
 
@@ -61,7 +61,7 @@ system_prompt = """
 
     Example:
     User Query : What is the weather of the new york ? 
-    Output : {{ "step": "plan" , "content":"The user is inetrested in  weather data of the new york"}}
+    Output : {{ "step": "plan" , "content":"The user is interested in  weather data of the new york"}}
     Output:{{"step":"plan","content":"From the available tools I should call get_weather"}}
 
     Output: {{"step":"action", "function":"get_weather", "input":"new york"}}
