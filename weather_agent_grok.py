@@ -3,14 +3,29 @@ from groq import Groq
 import requests
 import os 
 import json
-
+import subprocess
 load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def run_command(command):
-    result = os.system(command)
-    return result
+    result = subprocess.run(
+        command,
+        shell=True,
+        capture_output=True,
+        text=True
+    )
+    return result.stdout.strip() or result.stderr.strip()
+
+def sports_affairs(query: str):
+    return (
+        "I cannot fetch live WPL results directly yet. "
+        "Please check the latest match results here: "
+        "https://www.cricbuzz.com/cricket-series"
+    )
+
+
+     
 
 # print(run_command("dir"))
 
@@ -31,6 +46,10 @@ available_tools = {
     "run_command":{
          "fn":run_command,
          "description":"Take a command as inoout to execute on system and returns output"
+    },
+    "sports_affairs":{
+         "fn":sports_affairs,
+         "description":"Take a input from the user and execute using the sports_affairs function and proivide him/her details"
     }
 }
 
@@ -58,7 +77,7 @@ system_prompt = """
     Available Tools:
     - get_weather : Takes a city name as an input and return the current weather for the city.
     - run_command : Takes a command as input to execute on sysytem and returns output.
-
+    - sports_affairs : Take a input from the user for the sports related current affairs
     Example:
     User Query : What is the weather of the new york ? 
     Output : {{ "step": "plan" , "content":"The user is interested in  weather data of the new york"}}

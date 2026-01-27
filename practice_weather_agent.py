@@ -15,6 +15,21 @@ def get_weather(city:str):
         return f"The weather in  {city} is {response.text}."
     return "31 Degree Celcius"
 
+def run_command(ls):
+    return 0
+
+
+available_tools = {
+    "get_weather":{
+        "fn":get_weather,
+        "description":"Take a city name as an input and return the current weather iif the city"
+    },
+    "run_command":{
+        "fn":run_command,
+        "decription":"Take a command as input to execute on the system and return output"
+    }
+}
+
 
 system_prompt = """
     You are a helpful AI Assistant who is specialized in resolving user query.
@@ -50,14 +65,22 @@ system_prompt = """
 
 """
 
+messages = [
+    {"role":"system", "content":system_prompt}
+]
+
+user_query = input('> ')
+messages.append({"role":"user","content":user_query})
+
 response = client.chat.completions.create(
     model="openai/gpt-oss-120b",
     response_format = {"type":"json_object"},
-    messages=[
-        {"role":"system", "content":system_prompt},
-        {"role":"user", "content":"Hello , I am Vishal , what is the weather of navi-mumbai?"},
-        {"role":"assistant","content":json.dumps({"step":"plan","content":"The user wants the weather for Navi Mumbai"})}
-    ]
+    # messages=[
+    #     {"role":"system", "content":system_prompt},
+    #     {"role":"user", "content":"Hello , I am Vishal , what is the weather of navi-mumbai?"},
+    #     {"role":"assistant","content":json.dumps({"step":"plan","content":"The user wants the weather for Navi Mumbai"})}
+    # ]
+    messages=messages
 )
 
 print(response.choices[0].message.content)
