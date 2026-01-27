@@ -19,7 +19,7 @@ split_docs = text_splitter.split_documents(documents=docs)
 
 embeddings = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
-    api_key="AIzaSyAH49ZbBe2Sv1THQnfzIq8jLY5AW58nH04"
+    api_key="GEMINI_API_KEY"
     )
 
 # vector_store = QdrantVectorStore.from_documents(
