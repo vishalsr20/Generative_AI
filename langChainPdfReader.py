@@ -19,9 +19,10 @@ split_docs = text_splitter.split_documents(documents=docs)
 
 embeddings = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
-    api_key="AIzaSyAH49ZbBe2Sv1THQnfzIq8jLY5AW58nH04"
+    api_key="GEMINI_API_KEY"
     )
 
+user_query = input("< ")
 # vector_store = QdrantVectorStore.from_documents(
 #     documents=[],
 #     url="http://localhost:6333",
@@ -43,14 +44,51 @@ relevent_chunks = QdrantVectorStore.from_existing_collection(
 )
 
 search_result = relevent_chunks.similarity_search(
-    query="What is FS Module?"
+    query=user_query,
+    k=3
+
 )
 
-print("Relevent Chunks",search_result)
+# print("Relevent Chunks",search_result)
+
+
+
+def format_docs_as_passage(docs):
+    passages = []
+    for i, doc in enumerate(docs, start=1):
+        page = doc.metadata.get("page", "N/A")
+        passages.append(
+            f"[Passage {i} | Page {page}]\n{doc.page_content.strip()}"
+        )
+    return "\n\n".join(passages)
+
+
+context_passage = format_docs_as_passage(search_result)
+
 
 SYSTEM_PROMPT = """
-You are the helpful AI Assistant who respond base of the available context.
+You are a helpful AI assistant.
+Answer the question strictly using the given context.
+If the answer is not present in the context, say "I don't know".
 
 Context:
-{relevent_chunks}
+{context}
+
+Question:
+{question}
 """
+
+
+final_prompt = SYSTEM_PROMPT.format(
+    context=context_passage,
+    question=user_query
+)
+
+
+
+
+print("\nQuestion:")
+print(user_query)
+
+print("\nRelevant Context:\n")
+print(context_passage)
