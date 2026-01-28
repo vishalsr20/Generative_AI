@@ -20,6 +20,7 @@ split_docs = text_splitter.split_documents(documents=docs)
 embeddings = GoogleGenerativeAIEmbeddings(
     model="models/gemini-embedding-001",
     api_key="GEMINI_API_KEY"
+    api_key="GEMINI_API_KEY"
     )
 
 user_query = input("< ")
@@ -72,23 +73,5 @@ Answer the question strictly using the given context.
 If the answer is not present in the context, say "I don't know".
 
 Context:
-{context}
-
-Question:
-{question}
+{relevent_chunks}
 """
-
-
-final_prompt = SYSTEM_PROMPT.format(
-    context=context_passage,
-    question=user_query
-)
-
-
-
-
-print("\nQuestion:")
-print(user_query)
-
-print("\nRelevant Context:\n")
-print(context_passage)
